@@ -1,12 +1,14 @@
 import re
 
 
-menu = """
+titulo = " iBANK - MENU ".center(40, "_")
+menu = f"""
+{titulo}
 
-[D] Depositar
-[S] Sacar
-[E] Extrato
-[Q] Saír
+ [D] Depositar
+ [S] Sacar
+ [E] Extrato
+ [Q] Saír
 
 => """
 
@@ -94,7 +96,9 @@ while True:
         print(f"{' SALDO ATUAL '.ljust(25, '.')} R$ {saldo:10.2f}")
 
     elif opcao in "Qq":
+        print(" Obrigado por usar nossos serviços! ".center(40))
         break
 
     else:
-        print("Operação inválida. Selecione novamente a operação desejada")
+        print("*** OPERAÇÃO INVÁLIDA ***".center(40))
+        print(" Selecione uma operação válida ".center(40))
