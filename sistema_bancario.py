@@ -5,8 +5,8 @@ menu = """
 
 [D] Depositar
 [S] Sacar
-[e] Extrato
-[q] Saír
+[E] Extrato
+[Q] Saír
 
 => """
 
@@ -23,8 +23,12 @@ while True:
         print(" Depósito ".center(40, "-"))
 
         while True:
-            _valor = input("Entre com o valor do depósito: ")
-            if re.findall("[a-zA-Z]", _valor):
+            _valor = input("Entre com o valor [Q=Sair]: ")
+            if _valor == "":
+                ...
+            elif _valor in "Qq":
+                break
+            elif re.findall("[a-zA-Z]", _valor):
                 print("*** APENAS NÚMEROS ***".center(40))
             else:
                 if "," in _valor:
@@ -34,11 +38,9 @@ while True:
                 else:
                     valor = round(float(_valor), 2)
                     saldo += valor
-                    extrato += f"{' DEP '.ljust(24, '.')} R$  {valor:10.2f}"
+                    extrato += f"{' DEP '.ljust(25, '.')} R$ {valor:10.2f}\n"
                     print(" Depósito realizado com sucesso! ".center(40, "-"))
-                    print(
-                        f"{' SALDO ATUAL '.ljust(24, '.')} R$  {saldo:10.2f}"
-                    )
+                    print(f"{' SALDO ATUAL '.ljust(25, '.')} R$ {saldo:10.2f}")
                     break
 
     elif opcao in "Ss":
@@ -53,8 +55,12 @@ while True:
                 print("*** VOLTE AMANHÃ! ***".center(40))
                 break
 
-            _valor = input("Entre com o valor do saque: ")
-            if re.findall("[a-zA-Z]", _valor):
+            _valor = input("Entre com o valor [Q=Sair]: ")
+            if _valor == "":
+                ...
+            elif _valor in "Qq":
+                break
+            elif re.findall("[a-zA-Z]", _valor):
                 print("*** APENAS NÚMEROS ***".center(40))
             else:
                 if "," in _valor:
@@ -67,18 +73,14 @@ while True:
                     )
                 elif float(_valor) > saldo:
                     print("*** SEU SALDO NÃO É SUFICIENTE ***".center(40))
-                    print(
-                        f"{' SALDO ATUAL '.ljust(24, '.')} R$  {saldo:10.2f}"
-                    )
+                    print(f"{' SALDO ATUAL '.ljust(25, '.')} R$ {saldo:10.2f}")
                 else:
                     numero_saques += 1
-                    valor = round(float(_valor), 2)
-                    saldo -= valor
-                    extrato += f"{' SAQ '.ljust(24, '.')} R$ -{valor:10.2f}"
+                    valor = round((float(_valor) * -1), 2)
+                    saldo += valor
+                    extrato += f"{' SAQ '.ljust(25, '.')} R$ {valor:10.2f}\n"
                     print(" Saque realizado com sucesso! ".center(40, "-"))
-                    print(
-                        f"{' SALDO ATUAL '.ljust(24, '.')} R$  {saldo:10.2f}"
-                    )
+                    print(f"{' SALDO ATUAL '.ljust(25, '.')} R$ {saldo:10.2f}")
                     print(
                         "*** SAQUES RESTANTES: {} ***".format(
                             LIMITE_SAQUES - numero_saques
@@ -86,13 +88,13 @@ while True:
                     )
                     break
 
-    elif opcao == "e":
-        print(" Estrato ")
+    elif opcao in "Ee":
+        print(" Extrato ".center(40, "-"))
+        print(extrato)
+        print(f"{' SALDO ATUAL '.ljust(25, '.')} R$ {saldo:10.2f}")
 
-    elif opcao == "q":
+    elif opcao in "Qq":
         break
 
     else:
-        print(
-            "Operação inválida, por favor selecione novamente a operação desejada"
-        )
+        print("Operação inválida. Selecione novamente a operação desejada")
