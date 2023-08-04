@@ -1,16 +1,11 @@
-# dio-sistema-bancario
+# dio-sistema-bancario_v2
 
-Desafio de Projeto - Criando um Sistema Bancário com Python
+Desafio de Projeto - Otimizando o Sistema Bancário com Funções Python
 
 _Professor:_ **Guilherme Arthur de Carvalho** @decarvalhogui
 
-> Não encontrei o modelo do professor para download, então eu copiei da tela 😜    
+Para criar este repositório, eu importei de:
+[dio-sistema-bancário](https://github.com/cesargodoi/dio-sistema-bancario)  
 
-Implementei algumas features a mais:
-- Possibilidade de sair da transação teclando Q (ou q);
-- Verifica se estou digitando letras ```[a-zA-Z]```;
-- Substitui virgula por ponto para casas decimais;
-
-Muito grato por fazer este desafio!
 
 Cesar Godoi
