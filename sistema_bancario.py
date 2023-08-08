@@ -9,13 +9,14 @@ titulo = " iBANK - MENU ".center(LG, "_")
 menu = f"""
 {titulo}
 
- [L] Listar Usuários
- [U] Cadastrar Usuário
- [C] Criar Nova Conta
- [D] Depositar
- [S] Sacar
- [E] Extrato
- [Q] Saír
+ [D]   Depositar
+ [S]   Sacar
+ [E]   Extrato
+ [LU]  Listar Usuários
+ [CU]  Cadastrar Usuário
+ [LC]  Listar Contas
+ [CC]  Criar Conta Corrente
+ [Q]   Saír
 
 => """
 
@@ -35,6 +36,10 @@ usuarios = [
         "cpf": "24353442672",
         "endereco": "Av. Chavier Pinto, 12 - Santana - São Paulo/SP",
     },
+]
+contas_corrente = [
+    {"agencia": "0001", "numero_conta": 1, "usuario": "24374653672"},
+    {"agencia": "0001", "numero_conta": 2, "usuario": "24353442672"},
 ]
 
 
@@ -118,17 +123,6 @@ def ver_extrato(saldo, *, extrato):
     print(f"{' SALDO ATUAL '.ljust(LG - 15, '.')} R$ {saldo:10.2f}")
 
 
-def get_cpf():
-    while True:
-        cpf = "".join(re.findall(r"\d", input(" CPF: ")))
-        if len(cpf) > 11:
-            print("*** CPF INVÁLIDO (>11 DIGITOS) ***".center(LG))
-        elif cpf in [usuario["cpf"] for usuario in usuarios]:
-            print("*** CPF JÁ EXISTE ***".center(LG))
-        else:
-            return cpf
-
-
 def get_usuario(num):
     usuario = usuarios[int(num) - 1]
     print(" Usuário ".center(LG, "-"))
@@ -137,10 +131,10 @@ def get_usuario(num):
     print(f" CPF :        {usuario['cpf']}")
     print(f" Endereço :   {usuario['endereco']}")
     print()
-    input(" Tecle qualquer tecla para sair ".center(LG))
+    input(" Tecle qualquer tecla para sair ")
 
 
-def lista_de_usuarios(usuarios):
+def listar_usuarios(usuarios):
     print(" Lista de Usuários ".center(LG, "-"))
     print(f" #   {'NOME'.ljust(LG - 18)} CPF")
     for n, usuario in enumerate(usuarios):
@@ -156,10 +150,21 @@ def lista_de_usuarios(usuarios):
             break
         elif re.findall(r"\d", num):
             get_usuario(num)
-            lista_de_usuarios(usuarios)
+            listar_usuarios(usuarios)
             break
         else:
             print("*** # INVÁLIDO ***".center(LG))
+
+
+def get_cpf():
+    while True:
+        cpf = "".join(re.findall(r"\d", input(" CPF: ")))
+        if len(cpf) > 11:
+            print("*** CPF INVÁLIDO (>11 DIGITOS) ***".center(LG))
+        elif cpf in [usuario["cpf"] for usuario in usuarios]:
+            print("*** CPF JÁ EXISTE ***".center(LG))
+        else:
+            return cpf
 
 
 def cadastrar_usuario(usuarios):
@@ -170,9 +175,9 @@ def cadastrar_usuario(usuarios):
     cpf = get_cpf()
     logradouro = input(" Logradouro: ")
     numero = input(" Número: ")
-    bairro = input("Bairro: ")
-    cidade = input("Cidade: ")
-    uf = input("UF: ")
+    bairro = input(" Bairro: ")
+    cidade = input(" Cidade: ")
+    uf = input(" UF: ")
     usuario = dict(
         nome=nome,
         nascimento=nascimento,
@@ -181,6 +186,46 @@ def cadastrar_usuario(usuarios):
     )
     usuarios.append(usuario)
     print(" Usuário cadastrado com sucesso! ".center(LG, "-"))
+
+
+def listar_contas(contas_corrente, usuarios):
+    print(" Lista de Contas Corrente ".center(LG, "-"))
+    print(f" #   AGENCIA  {'NÚMERO'.ljust(LG - 27)} USUÁRIO")
+    for n, conta in enumerate(contas_corrente):
+        row = " {} {} {} {}".format(
+            str(n + 1).ljust(3),
+            conta["agencia"].ljust(8),
+            str(conta["numero_conta"]).ljust(LG - 27),
+            conta["usuario"],
+        )
+        print(row)
+
+
+def get_cpf_usuario():
+    while True:
+        cpf = "".join(
+            re.findall(r"\d", input(" Entre com o CPF do Usuário: "))
+        )
+        if len(cpf) > 11:
+            print("*** CPF INVÁLIDO (>11 DIGITOS) ***".center(LG))
+        elif cpf not in [usuario["cpf"] for usuario in usuarios]:
+            print("*** CPF NÃO EXISTE NO BANCO DE DADOS ***".center(LG))
+        else:
+            return cpf
+
+
+def cadastrar_conta(contas_corrente, usuarios):
+    print(" Criar Nova Conta ".center(LG, "-"))
+    agencia = "0001"
+    numero_conta = max([cc["numero_conta"] for cc in contas_corrente]) + 1
+    usuario = get_cpf_usuario()
+    nova_conta = dict(
+        agencia=agencia, numero_conta=numero_conta, usuario=usuario
+    )
+    contas_corrente.append(nova_conta)
+    print(" Conta Corrente Criada com Sucesso!".center(LG, "-"))
+    nome = [usr["nome"] for usr in usuarios if usr["cpf"] == usuario][0]
+    print(f" Agencia: {agencia}  C.Corrente: {numero_conta}  Usuário: {nome}")
 
 
 # loop principal
@@ -200,15 +245,17 @@ while True:
     elif opcao in "Ee":
         ver_extrato(saldo, extrato=extrato)
 
-    elif opcao in "Ll":
-        lista_de_usuarios(usuarios)
+    elif opcao in "LUlu":
+        listar_usuarios(usuarios)
 
-    elif opcao in "Uu":
+    elif opcao in "CUcu":
         cadastrar_usuario(usuarios)
-        print(usuarios)
 
-    elif opcao in "Cc":
-        print(" Criar Nova Conta ".center(LG, "-"))
+    elif opcao in "LClc":
+        listar_contas(contas_corrente, usuarios)
+
+    elif opcao in "CCcc":
+        cadastrar_conta(contas_corrente, usuarios)
 
     elif opcao in "Qq":
         print(" Obrigado por usar nossos serviços! ".center(LG))
